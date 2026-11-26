@@ -40,6 +40,40 @@
         <p>The platform is being prepared. Official nominee names will be added once submitted and approved.</p>
       </div>
     </section>
+    <section class="nomination-section" id="nominate">
+  <div class="container">
+    <span class="eyebrow">WASANII DINNER NIGHT 2026</span>
+    <h2>Submit a Nominee</h2>
+    <p>Recognise outstanding talent in the performing arts.</p>
+
+    <form id="nominee-form">
+      <label for="nominee-category">Award Category</label>
+      <select id="nominee-category" required>
+        <option value="">Choose a category</option>
+      </select>
+
+      <label for="nominee-name">Nominee Name</label>
+      <input id="nominee-name" type="text"
+        placeholder="Enter nominee's name" required>
+
+      <label for="nominee-description">Description (optional)</label>
+      <textarea id="nominee-description"
+        placeholder="Tell us about the nominee"></textarea>
+
+      <label for="submitted-by">Your Name</label>
+      <input id="submitted-by" type="text"
+        placeholder="Your name" required>
+
+      <label for="contact-email">Your Email</label>
+      <input id="contact-email" type="email"
+        placeholder="Your email address" required>
+
+      <button type="submit">Submit Nominee</button>
+      <p id="nominee-message" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+    
   </main>
 
   <footer>
