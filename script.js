@@ -111,16 +111,53 @@ if (nomineeForm) {
     submitButton.disabled = true;
     nomineeMessage.textContent = "Submitting nominee...";
 
-    const { error } = await db
-      .from("nominee_submissions")
-      .insert([nominee]);
+    const turnstileToken = document.querySelector(
+  '[name="cf-turnstile-response"]'
+)?.value;
 
-    submitButton.disabled = false;
+if (!turnstileToken) {
+  submitButton.disabled = false;
+  nomineeMessage.textContent =
+    "Please complete the security verification.";
+  return;
+}
 
-    if (error) {
-      console.error("Nominee submission error:", error);
-      nomineeMessage.textContent =
-        "Submission failed. Please try again later.";
+let response;
+let result;
+
+try {
+  response = await fetch("/api/submit-nominee", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      ...nominee,
+      turnstile_token: turnstileToken
+    })
+  });
+
+  result = await response.json();
+} catch (error) {
+  console.error("Submission request failed:", error);
+  nomineeMessage.textContent =
+    "Connection problem. Please try again.";
+  submitButton.disabled = false;
+  return;
+}
+
+submitButton.disabled = false;
+
+if (!response.ok) {
+  console.error("Submission error:", result);
+  nomineeMessage.textContent =
+    result.error || "Submission failed. Please try again.";
+
+  if (window.turnstile) {
+    window.turnstile.reset();
+  }
+  return;
+}
       return;
     }
 
