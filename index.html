@@ -67,6 +67,9 @@
       <label for="contact-email">Your Email</label>
       <input id="contact-email" type="email"
         placeholder="Your email address" required>
+      <div class="cf-turnstile"
+     data-sitekey="0x4AAAAAAGUyzUPGpfbGgeaC">
+</div>
 
       <button type="submit">Submit Nominee</button>
       <p id="nominee-message" aria-live="polite"></p>
@@ -82,5 +85,6 @@
   </footer>
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
