@@ -53,3 +53,80 @@ function escapeHTML(value) {
 }
 
 loadCategories();
+
+// WASANII DINNER NIGHT - Nominee Submission
+
+async function loadNomineeCategories() {
+  const categorySelect = document.getElementById("nominee-category");
+
+  if (!categorySelect) return;
+
+  const { data, error } = await db
+    .from("categories")
+    .select("id, name")
+    .eq("is_active", true)
+    .order("id");
+
+  if (error) {
+    console.error("Could not load nominee categories:", error);
+    return;
+  }
+
+  categorySelect.innerHTML =
+    '<option value="">Choose a category</option>';
+
+  data.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    categorySelect.appendChild(option);
+  });
+}
+
+loadNomineeCategories();
+
+const nomineeForm = document.getElementById("nominee-form");
+const nomineeMessage = document.getElementById("nominee-message");
+
+if (nomineeForm) {
+  nomineeForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const nominee = {
+      category_id: Number(document.getElementById("nominee-category").value),
+      nominee_name: document.getElementById("nominee-name").value.trim(),
+      description: document.getElementById("nominee-description").value.trim() || null,
+      submitted_by: document.getElementById("submitted-by").value.trim(),
+      contact_email: document.getElementById("contact-email").value.trim(),
+      status: "pending"
+    };
+
+    if (!nominee.category_id || !nominee.nominee_name ||
+        !nominee.submitted_by || !nominee.contact_email) {
+      nomineeMessage.textContent = "Please complete all required fields.";
+      return;
+    }
+
+    const submitButton = nomineeForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    nomineeMessage.textContent = "Submitting nominee...";
+
+    const { error } = await db
+      .from("nominee_submissions")
+      .insert([nominee]);
+
+    submitButton.disabled = false;
+
+    if (error) {
+      console.error("Nominee submission error:", error);
+      nomineeMessage.textContent =
+        "Submission failed. Please try again later.";
+      return;
+    }
+
+    nomineeMessage.textContent =
+      "Nominee submitted successfully! Awaiting admin review.";
+
+    nomineeForm.reset();
+  });
+}
