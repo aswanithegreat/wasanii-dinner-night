@@ -158,8 +158,7 @@ if (!response.ok) {
   }
   return;
 }
-      return;
-    }
+    
 
     nomineeMessage.textContent =
       "Nominee submitted successfully! Awaiting admin review.";
